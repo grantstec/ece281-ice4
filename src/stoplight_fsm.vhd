@@ -83,6 +83,20 @@ architecture stoplight_fsm_arch of stoplight_fsm is
 begin
 	-- CONCURRENT STATEMENTS ----------------------------
 	-- Next state logic
+
+    ---
+	f_Q_next(0) <= (NOT f_Q(1))AND(i_C);
+	f_Q_next(1) <= (NOT f_Q(1))AND(f_Q(0))AND(NOT (i_C));
+
+	
+	-- Output logic
+    -- Output logic
+    o_G <= (NOT (f_Q(1))) AND (f_Q(0));
+    o_Y <= f_Q(1) AND (NOT f_Q(0));
+    o_R <= ((NOT f_Q(1) AND (NOT f_Q(0)))) OR ((f_Q(1) AND f_Q(0)));	
+	-------------------------------------------------------	
+	
+	-- PROCESSES ----------------------------------------	
 	--- state memory w/ asynchronous reset ---
     register_proc : process (i_clk, i_reset)
     begin
@@ -92,25 +106,6 @@ begin
             f_Q <= f_Q_next;    -- next state becomes current state
         end if;
     end process register_proc;
-    ---
-	f_Q_next(0) <= NOT(f_Q(1))OR(i_C);
-	f_Q_next(1) <= NOT(f_Q(1))OR(f_Q(0))OR(NOT(i_C));
-
-	
-	-- Output logic
-	o_G <= NOT(f_Q(1))OR(f_Q(0));
-	o_Y <= f_Q(1)OR(NOT(f_Q(0)));
-    o_R <= (NOT f_Q(1)) OR ((NOT f_Q(0)) AND (f_Q(1) OR f_Q(0)));	
-	-------------------------------------------------------	
-	
-	-- PROCESSES ----------------------------------------	
-	-- state memory w/ asynchronous reset ---------------
-	register_proc : process (  )
-	begin
-			--Reset state is yellow
-
-
-	end process register_proc;
 	-------------------------------------------------------
 	
 end stoplight_fsm_arch;
